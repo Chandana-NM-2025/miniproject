@@ -1,0 +1,26 @@
+<div class="topbar">
+  <div class="topbar-left">
+    <span>Welcome to E-Shop!</span>
+  </div>
+  <div class="topbar-right" class="nav-icons">
+<div >
+    <span class="font" >
+      <a routerLink="/wishlist">wishlist</a>
+      <a routerLink="/cart">cart</a>
+    </span>
+
+
+    <span *ngIf="!isLoggedIn">
+      <a routerLink="/login">login</a> | 
+      <a routerLink="/register">Register</a>
+    </span>
+    
+    <span *ngIf="isLoggedIn">
+      Hello, {{ username }} | 
+      <a href="#" (click)="logout()">Logout</a> | 
+      Cart: {{ cartCount }}
+    </span>
+     
+  </div>
+
+</div>

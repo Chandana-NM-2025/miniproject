@@ -1,0 +1,68 @@
+.navbar {
+  width: 100%;
+  background-color: white;
+  border-bottom: 3px solid #141414; /* green border */
+  padding: 5px 100px;
+  font-family: 'Segoe UI', sans-serif;
+  
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* start from left */
+  max-width: 1200px;
+  margin: 0;
+  padding: 0 20px;
+  gap: 60px; /* gap between logo, search bar, links */
+}
+
+/* Logo */
+.logo a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0f0f0f;
+  text-decoration: none;
+  margin-left: 20px; /* slight left margin */
+  gap:115px;
+}
+
+/* Search bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  /* gap: 5px; small gap between input and button */
+  padding: 1px 4px;
+ 
+}
+
+.search-bar input {
+  padding: 7px 10px;
+  border: 3px solid #ccc;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+}
+
+.search-bar button {
+  padding: 2px 11px ;
+  border: none;
+  background-color: #606361;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  color: #fcf8f8;
+}
+
+/* Navigation links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex:left ;
+  gap: 50px;
+  margin-left: auto; /* push links to right */
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}

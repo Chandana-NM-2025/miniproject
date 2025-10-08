@@ -1,0 +1,15 @@
+<div>
+  <div class="auth-page">
+  <h2>Login</h2>
+  <form (ngSubmit)="login()">
+    <label><b>Email</b></label>
+    <input type="email" [(ngModel)]="email" name="email" required placeholder="Enter your email">
+
+    <label><b>Password</b></label>
+    <input type="password" [(ngModel)]="password" name="password" required placeholder="Enter your password">
+
+    <button type="submit">Login</button>
+  </form>
+  <p>Don't have an account? <a routerLink="/register">Register</a></p>
+</div>
+</div>

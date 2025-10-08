@@ -1,0 +1,31 @@
+
+<div class="orders-container">
+  <h2>My Orders</h2>
+
+  <!-- Loading -->
+  <div *ngIf="loading">Loading your orders...</div>
+
+  <!-- No orders -->
+  <div *ngIf="!loading && orders.length === 0" class="no-orders">
+    <p>No orders found. Place your first order!</p>
+    <button (click)="placeOrder()">Place Order</button>
+  </div>
+
+  <!-- Orders list -->
+  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+    <div *ngFor="let order of orders" class="order-card">
+      <h3>Order #{{ order.orderID }}</h3>
+      <p><strong>Date:</strong> {{ order.orderDate | date:'short' }}</p>
+      <p><strong>Status:</strong> <span class="status">{{ order.status }}</span></p>
+      <p><strong>Total:</strong> ₹{{ order.totalPrice }}</p>
+
+      <div class="order-actions">
+        <button (click)="cancelOrder(order)" [disabled]="order.status === 'Cancelled'">
+          Cancel Order
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

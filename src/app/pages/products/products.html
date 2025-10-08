@@ -1,0 +1,24 @@
+<div *ngIf="loading">Loading products...</div>
+
+<div *ngIf="!loading && products.length === 0">
+  No products available.
+</div>
+
+<div class="product-grid" *ngIf="!loading && pagedProducts.length > 0">
+  <div class="product-card" *ngFor="let product of pagedProducts">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+    <p>Price: ₹{{ product.price }}</p>
+    <p>Available {{ product.quantity }}</p>
+    <button (click)="addToCart(product)" [disabled]="product.quantity === 0">
+      Add to Cart
+    </button>
+  </div>
+</div>
+
+<!-- Pagination Controls -->
+<div class="pagination" *ngIf="totalPages > 1">
+  <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+  <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+</div>

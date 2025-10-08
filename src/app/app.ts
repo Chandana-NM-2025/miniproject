@@ -1,12 +1,17 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Topbar } from './components/topbar/topbar';
+import { Navbar } from './components/navbar/navbar';
+import { Footer } from './components/footer/footer';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, Topbar, Navbar, Footer, CommonModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
-  protected readonly title = signal('mini-ecom-ui');
+  title = 'mini-ecom-ui';
 }

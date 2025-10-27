@@ -19,7 +19,7 @@ interface RegisterRequest {
   providedIn: 'root'
 })
 export class AuthService {
-   private apiUrl = 'https://localhost:7147/api/Users'; // replace with your API URL
+   private apiUrl = 'https://localhost:7279/api/Users'; 
 
   constructor(private http: HttpClient) {}
 

@@ -77,5 +77,6 @@ export class ProductsComponent implements OnInit {
       alert(`${product.name} added to cart!`);
       this.router.navigate(['/cart']); // redirect to cart page
     });
+    
   }
 }

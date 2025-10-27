@@ -26,7 +26,7 @@ export interface ShopCart {
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private baseUrl = 'https://localhost:7147/api/Carts'; // replace with your backend API
+  private baseUrl = 'https://localhost:7279/api/ShopCarts'; 
 
   constructor(private http: HttpClient) {}
 

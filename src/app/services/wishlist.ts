@@ -1,10 +1,14 @@
 // wishlist.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WishlistService {
+
+  private apiUrl = 'https://localhost:7279/api/Products'; //new
+  constructor(private http: HttpClient) {}  //new
   private wishlist: any[] = [];
 
   addToWishlist(product: any) {

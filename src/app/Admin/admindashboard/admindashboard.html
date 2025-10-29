@@ -1,0 +1,220 @@
+<div class="admin-container">
+  <h1>👑 Admin Panel</h1>
+  <p class="welcome">Welcome, <b>{{ username }}</b>!</p>
+
+  <!-- 🔹 Tabs -->
+  <div class="tabs">
+    <button [class.active]="activeTab === 'products'" (click)="setTab('products')">
+      📦 Product Management
+    </button>
+    <button [class.active]="activeTab === 'inventory'" (click)="setTab('inventory')">
+      📊 Stock / Inventory Tracking
+    </button>
+     <button [class.active]="activeTab === 'orders'" (click)="setTab('orders')">
+    🚚 Order Tracking
+  </button>
+  </div>
+
+  <!-- 🔹 PRODUCT MANAGEMENT TAB -->
+  <div *ngIf="activeTab === 'products'" class="tab-content">
+    <h2>🛒 Product Management</h2>
+    <br />
+    <h3>Add New Product</h3>
+    <br />
+
+    <!-- Add Product Form -->
+    <form (ngSubmit)="addProduct()" class="product-form">
+      <label>Add Product Name:</label>
+      <input [(ngModel)]="newProduct.name" name="name" placeholder="Product Name" required />
+
+      <label>Add Product Brand:</label>
+      <input [(ngModel)]="newProduct.brand" name="brand" placeholder="Brand" required />
+
+      <label>Add Product Category:</label>
+      <input [(ngModel)]="newProduct.category" name="category" placeholder="Category" required />
+
+      <label>Add Product Price:</label>
+      <input [(ngModel)]="newProduct.price" name="price" type="number" placeholder="Price" required />
+
+      <label>Add Product Stock:</label>
+      <input [(ngModel)]="newProduct.stock" name="stock" type="number" placeholder="Stock" required />
+
+      <label>Add Product Image URL:</label>
+      <input [(ngModel)]="newProduct.imageUrl" name="imageUrl" placeholder="Image URL" required />
+
+      <label>Add Product Description:</label>
+      <textarea [(ngModel)]="newProduct.description" name="description" placeholder="Description"></textarea>
+
+      <button type="submit" class="btn-add">Add Product</button>
+    </form>
+
+    <!-- Product List -->
+    <div class="product-header">
+      <h3>All Products</h3>
+
+      <!-- 🔍 Search -->
+      <div class="search-container">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="searchProducts()"
+          placeholder=" Search products by name..."
+        />
+        <button (click)="searchProducts()">Search 🔍</button>
+      </div>
+    </div>
+
+    <table *ngIf="!loading && products.length > 0" class="product-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <!-- <th>Category</th>
+          <th>Brand</th> -->
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td><img [src]="p.imageUrl" alt="{{ p.name }}" /></td>
+          <td>{{ p.name }}</td>
+          <!-- <td>{{ p.category }}</td>
+          <td>{{ p.brand }}</td> -->
+          <td>₹{{ p.price }}</td>
+          <td>{{ p.stock }}</td>
+          <td [class.low]="isLowStock(p.stock)">
+            {{ p.isActive ? 'Active' : 'Inactive' }}
+          </td>
+          <td>
+            <button (click)="startEdit(p)" class="btn-edit">✏️</button>
+            <button (click)="deleteProduct(p.id)" class="btn-delete">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Edit Product Form -->
+    <div *ngIf="editProduct" class="edit-box">
+      <h4>Edit Product</h4>
+
+      <label>Product Name:</label>
+      <input [(ngModel)]="editProduct.name" name="editName" placeholder="Name" />
+
+      <label>Brand:</label>
+      <input [(ngModel)]="editProduct.brand" name="editBrand" placeholder="Brand" />
+
+      <label>Category:</label>
+      <input [(ngModel)]="editProduct.category" name="editCategory" placeholder="Category" />
+
+      <label>Price:</label>
+      <input [(ngModel)]="editProduct.price" name="editPrice" type="number" placeholder="Price" />
+
+      <label>Stock:</label>
+      <input [(ngModel)]="editProduct.stock" name="editStock" type="number" placeholder="Stock" />
+
+      <label>Image URL:</label>
+      <input [(ngModel)]="editProduct.imageUrl" name="editImageUrl" placeholder="Image URL" />
+
+      <label>Description:</label>
+      <textarea [(ngModel)]="editProduct.description" name="editDescription" placeholder="Description"></textarea>
+
+      <button (click)="updateProduct()" class="btn-update">💾 Save Changes</button>
+      <button (click)="editProduct = null" class="btn-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <!-- 🔹 INVENTORY TRACKING TAB -->
+  <div *ngIf="activeTab === 'inventory'" class="tab-content">
+    <h2>📊 Stock & Inventory Tracking</h2>
+
+    <table class="inventory-table" *ngIf="products.length > 0">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products" [class.low-stock]="isLowStock(p.stock)">
+          <td>{{ p.id }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.category }}</td>
+          <td>₹{{ p.price }}</td>
+          <td>{{ p.stock }}</td>
+          <td>{{ p.stock > 0 ? 'In Stock' : 'Out of Stock' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🔹 ORDER TRACKING TAB -->
+<div *ngIf="activeTab === 'orders'" class="tab-content">
+  <div class="order-header">
+    <h2>🚚 Order Tracking</h2>
+
+    <!-- 🔍 Search Bar aligned right -->
+    <div class="search-container">
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    (input)="filterOrders()"
+    placeholder="🔍 Search by product name..."
+  />
+  <button (click)="filterOrders()">Search</button>
+</div>
+  </div>
+
+  <table class="order-table" *ngIf="orders.length > 0">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>User Name</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Total (₹)</th>
+        <th>Address</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let o of orders">
+        <td>{{ o.id }}</td>
+        <td>{{ o.address?.fullName || 'N/A' }}</td>
+        <td>{{ o.items[0]?.product?.name }}</td>
+        <td>{{ o.items[0]?.quantity }}</td>
+        <td>{{ o.items[0]?.price }}</td>
+        <td>
+          {{ o.address?.street }}, {{ o.address?.city }},
+          {{ o.address?.state }} - {{ o.address?.postalCode }}
+        </td>
+        <td>
+          <select [(ngModel)]="o.status" (change)="updateOrderStatus(o)">
+            <option>Pending</option>
+            <option>Processing</option>
+            <option>Shipped</option>
+            <option>Delivered</option>
+            <option>Cancelled</option>
+          </select>
+        </td>
+        <td>{{ o.orderDate | date: 'short' }}</td>
+        <td>
+          <button class="btn-delete" (click)="deleteOrder(o.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!orders.length && !loading">No orders found.</div>
+  <div *ngIf="loading">Loading orders...</div>
+</div>
+
+</div>

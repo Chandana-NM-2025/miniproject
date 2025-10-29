@@ -1,82 +1,123 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductService } from '../../services/product';
 import { Product } from '../../services/product';
+import { ProductService } from '../../services/product';
 import { CartService } from '../../services/cart';
-import { Router } from '@angular/router';
+import { WishlistService } from '../../services/wishlist';
+import { ActivatedRoute } from '@angular/router';
 
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './products.html',
   styleUrls: ['./products.css']
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
-  pagedProducts: Product[] = [];
-  loading = true;
-  userID = 1;
-
-  // Pagination
-  currentPage = 1;
-  pageSize = 20; // 5 columns × 4 rows
-  totalPages = 1;
+  loading = false;
+  message = '';
+  wishCount = 0;
+  cartCount = 0;
 
   constructor(
-    private productService: ProductService, 
-    private cartService: CartService,
-    public router: Router
+    private productSvc: ProductService,
+    private cartSvc: CartService,
+    private wishSvc: WishlistService,
+     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
-  }
+  this.route.queryParams.subscribe(params => {
+    const q = params['q'];
+    if (q) {
+      this.searchProducts(q);
+    } else {
+      this.load();
+    }
+  });
+}
 
-  loadProducts() {
+
+searchProducts(q: string) {
+  this.loading = true;
+  this.productSvc.searchProducts(q).subscribe({
+    next: res => {
+      this.products = res;
+      this.loading = false;
+      this.message = res.length ? '' : 'No products found.';
+    },
+    error: () => {
+      this.loading = false;
+      this.message = '❌ Failed to search products';
+    }
+  });
+}
+
+  // 🔹 Load all products
+  load() {
     this.loading = true;
-    this.productService.getProducts().subscribe({
-      next: (data) => {
-        this.products = data;
-        this.totalPages = Math.ceil(this.products.length / this.pageSize);
-        this.setPage(this.currentPage);
+    this.productSvc.getAll().subscribe({
+      next: res => {
+        this.products = res;
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: () => {
+        this.loading = false;
+        this.message = '❌ Failed to load products';
+      }
+    });
+    this.refreshBadges();
+  }
+
+  // 🔹 Refresh wishlist and cart count
+  refreshBadges() {
+    this.wishSvc.count().subscribe(c => this.wishCount = c);
+    this.cartSvc.count().subscribe(c => this.cartCount = c);
+  }
+
+  // 🔹 Add to Cart
+  addToCart(p: Product) {
+    if (p.stock <= 0) {
+      this.message = `❌ ${p.name} is out of stock`;
+      return;
+    }
+
+    this.cartSvc.addToCart(p.id, 1).subscribe({
+      next: () => {
+        this.message = `✅ ${p.name} added to cart`;
+        p.stock--; // update frontend stock immediately
+        this.productSvc.updateStock(p.id, p.stock).subscribe();
+        this.refreshBadges();
+      },
+      error: (err) => {
+        if (err.status === 200 || err.status === 0) {
+          this.message = `✅ ${p.name} added to cart`;
+          p.stock--;
+          this.refreshBadges();
+        } else {
+          this.message = `❌ Failed to add ${p.name} to cart`;
+        }
+      }
     });
   }
 
-  setPage(page: number) {
-    this.currentPage = page;
-    const start = (page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.pagedProducts = this.products.slice(start, end);
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.setPage(this.currentPage + 1);
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.setPage(this.currentPage - 1);
-    }
-  }
-
-  addToCart(product: Product) {
-    const cartItem = {
-      userID: this.userID,
-      productID: product.productID,
-      quantity: 1
-    };
-    this.cartService.addToCart(cartItem).subscribe(() => {
-      alert(`${product.name} added to cart!`);
-      this.router.navigate(['/cart']); // redirect to cart page
+  // 🔹 Add to Wishlist
+  addToWishlist(p: Product) {
+    this.wishSvc.addToWishlist(p.id).subscribe({
+      next: () => {
+        this.message = `✅ ${p.name} added to wishlist`;
+        this.refreshBadges();
+      },
+      error: (err) => {
+        if (err.status === 200 || err.status === 0) {
+          this.message = `✅ ${p.name} added to wishlist`;
+          this.refreshBadges();
+        } else {
+          this.message = `❌ Failed to add ${p.name} to wishlist`;
+        }
+      }
     });
-    
   }
 }

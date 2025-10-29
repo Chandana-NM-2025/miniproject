@@ -1,59 +1,214 @@
-.loading, .empty-cart {
+/* -----------------------------
+   🛒 CART PAGE STYLING
+----------------------------- */
+
+h2 {
   text-align: center;
-  margin: 20px 0;
-  font-size: 1.2rem;
-  color: #555;
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+  margin: 25px 0;
 }
 
-.cart-item {
+/* Messages */
+.msg {
+  text-align: center;
+  color: #388e3c;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.empty {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+  margin-top: 40px;
+}
+
+/* Cart Container */
+.cart-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 25px;
+  padding: 20px 40px;
+  justify-content: center;
+}
+
+/* Individual Cart Card */
+.cart-card {
+  width: 90%;
+  margin: 15px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  padding: 10px 0;
+  padding: 15px 20px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.item-info h4 {
-  margin: 0;
-  font-size: 1.1rem;
+.cart-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
-.item-info p {
-  margin: 5px 0 0 0;
+/* Product Image */
+.cart-card img {
+  width: 200px;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
 }
 
-.item-quantity {
+.cart-card img:hover {
+  transform: scale(1.05);
+}
+
+/* Product Info */
+.info {
+  text-align: center;
+}
+
+.info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.price {
+  color: #1976d2;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Quantity Controls */
+.qty {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.item-quantity button {
-  padding: 3px 8px;
+.qty button {
+  border: none;
+  background-color: #1e88e5;
+  color: white;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-.item-remove button {
-  background-color: #ff5252;
+.qty button:hover {
+  background-color: #1565c0;
+}
+
+.qty span {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Amount */
+.amount {
+  font-size: 15px;
+  color: #444;
+  font-weight: 500;
+}
+
+/* Action Buttons */
+.actions {
+  margin-top: 10px;
+}
+
+.actions .remove {
+  background:  #5e0909;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 4px;
+  transition: background 0.3s;
+  font-weight: 500;
+  height: 75px;
 }
 
-.cart-total {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.actions .remove:hover {
+  background: #e53935;
 }
 
+/* Total Section */
+.total {
+  text-align: right;
+  width: 90%;
+  margin: 25px auto;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Checkout Button */
 .checkout-btn {
-  background-color: #00c853;
+  display: inline-block;
+  float: right;
+  margin: 20px 60px 40px 0; /* top-right-bottom-left */
+  background: #43a047;
   color: white;
+  font-size: 16px;
   border: none;
-  padding: 10px 15px;
+  border-radius: 8px;
+  padding: 12px 28px;
   cursor: pointer;
-  border-radius: 4px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.checkout-btn:hover {
+  background: #2e7d32;
+  transform: translateY(-2px);
+}
+
+.checkout-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.checkout-btn[disabled],
+.checkout-btn.disabled-btn {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #bdb9b9;
+}
+.hint {
+ text-align: center;
+  font-size: 18px;
+  color: #777;
+  margin-top: 40px;
+  padding: 0 400px;
+}
+  
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cart-container {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    padding: 10px 20px;
+  }
+
+  .cart-card img {
+    width: 160px;
+    height: 150px;
+  }
+
+  .checkout-btn {
+    width: 90%;
+  }
 }

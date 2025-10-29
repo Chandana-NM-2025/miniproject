@@ -1,53 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-export interface Product {
-  productID: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import { environment } from '../Environment/environment';
+import { Observable, map } from 'rxjs';
+import { Product } from './product';
 
 export interface CartItem {
   id: number;
-  cartId: number;
   productId: number;
-  product: Product;
-  quantity: number;
-}
-
-export interface ShopCart {
-  id: number;
   userId: number;
-  createdAt: string;
-  items: CartItem[];
+  quantity: number;
+  product: Product;
 }
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private baseUrl = 'https://localhost:7279/api/ShopCarts'; 
+  private base = `${environment.apiUrl}/Cart`;
 
   constructor(private http: HttpClient) {}
 
-  getCart(userId: number): Observable<ShopCart> {
-    return this.http.get<ShopCart>(`${this.baseUrl}/${userId}`);
+  // ✅ Get cart items
+  getCart(): Observable<CartItem[]> {
+    return this.http.get<CartItem[]>(this.base);
   }
 
-  addToCart(cartItem: { userID: number; productID: number; quantity: number }) {
-    return this.http.post(`${this.baseUrl}/add`, cartItem);
+  // ✅ Add product to cart
+  addToCart(productId: number, quantity = 1) {
+    return this.http.post(`${this.base}/add`, { ProductID: productId, Quantity: quantity });
   }
 
-  updateCartItem(item: CartItem) {
-    return this.http.put(`${this.baseUrl}/update`, item);
+  // ✅ Update quantity
+  updateCartItem(itemId: number, quantity: number) {
+  // send quantity as query param (backend expects it)
+  return this.http.put(`${this.base}/update/${itemId}?quantity=${quantity}`, {});
+}
+
+  // ✅ Remove item from cart
+  removeFromCart(itemId: number) {
+  return this.http.delete(`${this.base}/remove/${itemId}`);
+}
+  // ✅ Clear entire cart
+  clearCart() {
+    return this.http.delete(`${this.base}/clear`);
   }
 
-  removeCartItem(itemId: number) {
-    return this.http.delete(`${this.baseUrl}/${itemId}`);
+  // ✅ Count items
+  count(): Observable<number> {
+    return this.getCart().pipe(map(items => items.reduce((a, c) => a + c.quantity, 0)));
   }
 
-  checkout(userId: number) {
-    return this.http.post(`${this.baseUrl}/checkout`, { userId });
-    
+  // ✅ Total price
+  total(): Observable<number> {
+    return this.getCart().pipe(map(items => items.reduce((s, c) => s + c.product.price * c.quantity, 0)));
   }
 }

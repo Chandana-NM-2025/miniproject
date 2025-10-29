@@ -1,29 +1,40 @@
-<div *ngIf="loading" class="loading">Loading cart...</div>
+<h2>🛒 My Cart</h2>
+<p class="msg" *ngIf="message">{{ message }}</p>
 
-<div *ngIf="!loading && cartItems.length === 0" class="empty-cart">
-  Your cart is empty.
-</div>
+<div *ngIf="!items.length" class="empty">No items in cart.</div>
 
-<div *ngIf="!loading && cartItems.length > 0">
-  <div class="cart-item" *ngFor="let item of cartItems">
-    <div class="item-info">
-      <h4>{{ item.product.name }}</h4>
-      <p>Price: ₹{{ item.product.price }}</p>
+<div *ngIf="items.length" class="cart-container">
+  <div class="cart-card" *ngFor="let it of items">
+    <img [src]="it.product.imageUrl" alt="{{ it.product.name }}" />
+
+    <div class="info">
+      <h3>{{ it.product.name }}</h3>
+      <p class="price">₹ {{ it.product.price | number:'1.0-0' }}</p>
+      <div class="qty">
+        <button (click)="dec(it)">−</button>
+        <span>{{ it.quantity }}</span>
+        <button (click)="inc(it)">+</button>
+      </div>
+      <p class="amount">Amount: ₹ {{ (it.product.price * it.quantity) | number:'1.0-0' }}</p>
     </div>
 
-    <div class="item-quantity">
-      <button (click)="decreaseQty(item)" [disabled]="item.quantity <= 1">-</button>
-      <span>{{ item.quantity }}</span>
-      <button (click)="increaseQty(item)" [disabled]="item.quantity >= item.product.quantity">+</button>
-    </div>
-
-    <div class="item-remove">
-      <button (click)="removeItem(item)">Remove</button>
+    <div class="actions">
+      <button class="remove" (click)="remove(it)">Remove </button>
     </div>
   </div>
-
-  <div class="cart-total">
-    <h3>Total: ₹{{ total }}</h3>
-    <button class="checkout-btn" (click)="checkout()">Checkout</button>
-  </div>
 </div>
+
+<div class="total" *ngIf="items.length">
+  <b>Total:</b> ₹ {{ total | number:'1.0-0' }}
+</div>
+
+<button 
+  class="checkout-btn" 
+  (click)="proceedToCheckout()" 
+  [disabled]="!items || !items.length"
+  [ngClass]="{ 'disabled-btn': !items || !items.length }">
+  Checkout ✅
+</button>
+
+<p *ngIf="!items || !items.length" class="hint">🛒 Add items to enable checkout.</p>
+

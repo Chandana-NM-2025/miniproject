@@ -1,20 +1,19 @@
-<h2>My Wishlist</h2>
+<h2>My Wishlist ❤️</h2>
+<p class="msg" *ngIf="message">{{ message }}</p>
 
-<div *ngIf="wishlist.length > 0; else empty">
-  <div class="wishlist-item" *ngFor="let item of wishlist">
-    <img [src]="item.imageUrl" alt="{{ item.name }}" />
-    <div class="details">
-      <h3>{{ item.name }}</h3>
-      <p>₹{{ item.price }}</p>
+<div *ngIf="loading">Loading wishlist...</div>
+<div *ngIf="!loading && !items.length">No items in wishlist.</div>
+
+<ul class="list" *ngIf="!loading && items.length">
+  <li *ngFor="let it of items">
+    <img [src]="it.product.imageUrl" alt="">
+    <div class="info">
+      <div class="name">{{ it.product.name }}</div>
+      <div class="price">₹ {{ it.product.price | number:'1.0-0' }}</div>
     </div>
-
     <div class="actions">
-      <button (click)="addToCart(item)" class="cart-btn">Add to Cart</button>
-      <button (click)="removeFromWishlist(item)" class="remove-btn">Remove</button>
+      <button (click)="moveToCart(it)">Add to Cart 🛒</button>
+      <button (click)="remove(it)">Delete ❌</button>
     </div>
-  </div>
-</div>
-
-<ng-template #empty>
-  <p class="empty">Your wishlist is empty 💔</p>
-</ng-template>
+  </li>
+</ul>

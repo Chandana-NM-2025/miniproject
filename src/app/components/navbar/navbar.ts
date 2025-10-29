@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -13,5 +13,12 @@ import { CommonModule } from '@angular/common';
 })
 export class Navbar {
   searchQuery = '';
-}
 
+  constructor(private router: Router) {}
+
+  search() {
+    const trimmed = this.searchQuery.trim();
+    if (!trimmed) return;
+    this.router.navigate(['/products'], { queryParams: { q: trimmed } });
+  }
+}

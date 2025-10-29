@@ -1,61 +1,212 @@
-h2 {
-  margin-bottom: 20px;
-  color: #333;
+/* -----------------------------
+   ❤️ WISHLIST PAGE STYLING
+----------------------------- */
+
+body {
+  background: #f9f9f9;
+  font-family: "Poppins", sans-serif;
 }
 
-.wishlist-item {
+h2 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  color: #222;
+  margin: 30px 0;
+}
+
+/* Message Styling */
+.msg {
+  text-align: center;
+  color: #388e3c;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+.msg.error {
+  color: #d32f2f;
+}
+
+/* Loading and Empty States */
+.loading,
+.empty {
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  margin-top: 40px;
+}
+
+/* -----------------------------
+   🧾 Wishlist Container
+----------------------------- */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 20px 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Each Wishlist Item (Cart style) */
+.list li {
+  list-style: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 10px;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  padding: 20px 25px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.wishlist-item img {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  object-fit: cover;
+.list li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
-.details {
-  flex-grow: 1;
-  margin-left: 12px;
+/* Product Image */
+.list img {
+  width: 160px;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #f5f5f5;
+  padding: 5px;
+  margin-right: 25px;
+}
+
+/* Product Info */
+.info {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.info .name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.price {
+  color: #1976d2;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .actions button {
-  margin-left: 8px;
-  padding: 8px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-.cart-btn {
-  background-color: #28a745;
-  color: #fff;
+.actions button:first-child {
+  background: #1e88e5;
+  color: white;
 }
 
-.cart-btn:hover {
-  background-color: #218838;
+.actions button:first-child:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
 }
 
-.remove-btn {
-  background-color: #dc3545;
-  color: #fff;
+.actions button:last-child {
+  background: #e53935;
+  color: white;
 }
 
-.remove-btn:hover {
-  background-color: #c82333;
+.actions button:last-child:hover {
+  background: #c62828;
+  transform: translateY(-2px);
 }
 
-.empty {
+/* -----------------------------
+   💰 Total Amount + Confirm Order
+----------------------------- */
+.total-box {
+  max-width: 1100px;
+  margin: 40px auto 80px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  padding: 25px 30px;
   text-align: center;
-  color: #777;
-  font-style: italic;
+}
+
+.total-box h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.total-box p {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 25px;
+}
+
+.total-box button {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.total-box button:hover {
+  background: #1b5e20;
+  transform: translateY(-2px);
+}
+
+/* -----------------------------
+   📱 Responsive Design
+----------------------------- */
+@media (max-width: 900px) {
+  .list {
+    padding: 15px 20px;
+  }
+
+  .list li {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .list img {
+    width: 120px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+
+  .info {
+    padding: 10px 0;
+  }
+
+  .actions {
+    flex-direction: row;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .total-box {
+    margin: 25px 10px;
+  }
 }

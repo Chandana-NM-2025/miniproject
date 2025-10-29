@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-footer',
@@ -8,4 +9,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './footer.html',
   styleUrls: ['./footer.css']
 })
-export class Footer {}
+export class Footer {
+
+}

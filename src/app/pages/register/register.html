@@ -9,9 +9,12 @@
 
     <label><b>Password</b></label>
     <input type="password" [(ngModel)]="password" name="password" required placeholder="Enter your password">
+    
 
-    <button type="submit">Register</button>
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Registering...' : 'Register' }}
+    </button>
   </form>
+
   <p>Already have an account? <a routerLink="/login">Login</a></p>
 </div>
-

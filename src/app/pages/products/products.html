@@ -1,24 +1,26 @@
+
+
+<div class="toolbar">
+  <span>Wishlist: ❤️ {{ wishCount }}</span>
+  <span>Cart: 🛒 {{ cartCount }}</span>
+</div>
+
+<p class="msg" *ngIf="message">{{ message }}</p>
+
 <div *ngIf="loading">Loading products...</div>
 
-<div *ngIf="!loading && products.length === 0">
-  No products available.
-</div>
+<div class="grid">
+  <div class="card" *ngFor="let p of products">
+    <img [src]="p.imageUrl" alt="{{ p.name }}">
+    <h3>{{ p.name }}</h3>
+    <p class="price">₹ {{ p.price | number:'1.0-0' }}</p>
+    <p class="desc">{{ p.description }}</p>
 
-<div class="product-grid" *ngIf="!loading && pagedProducts.length > 0">
-  <div class="product-card" *ngFor="let product of pagedProducts">
-    <h3>{{ product.name }}</h3>
-    <p>{{ product.description }}</p>
-    <p>Price: ₹{{ product.price }}</p>
-    <p>Available {{ product.quantity }}</p>
-    <button (click)="addToCart(product)" [disabled]="product.quantity === 0">
-      Add to Cart
-    </button>
+    <div class="actions">
+      <button (click)="addToCart(p)" [disabled]="p.stock <= 0">Add to Cart</button>
+      <button (click)="addToWishlist(p)">Wishlist</button>
+    </div>
+
+    <small *ngIf="p.stock <= 0" class="out">Out of Stock</small>
   </div>
-</div>
-
-<!-- Pagination Controls -->
-<div class="pagination" *ngIf="totalPages > 1">
-  <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
-  <span>Page {{ currentPage }} of {{ totalPages }}</span>
-  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
 </div>

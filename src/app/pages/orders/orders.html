@@ -1,31 +1,74 @@
-
-<div class="orders-container">
-  <h2>My Orders</h2>
-
-  <!-- Loading -->
-  <div *ngIf="loading">Loading your orders...</div>
-
-  <!-- No orders -->
-  <div *ngIf="!loading && orders.length === 0" class="no-orders">
-    <p>No orders found. Place your first order!</p>
-    <button (click)="placeOrder()">Place Order</button>
+<div class="checkout-container">
+  <!-- 🟦 LEFT PANEL -->
+  <div class="checkout-left">
+    <h2>Welcome</h2>
+    <p>You are 30 seconds away from completing your order!</p>
+    
   </div>
 
-  <!-- Orders list -->
-  <div *ngIf="!loading && orders.length > 0" class="orders-list">
-    <div *ngFor="let order of orders" class="order-card">
-      <h3>Order #{{ order.orderID }}</h3>
-      <p><strong>Date:</strong> {{ order.orderDate | date:'short' }}</p>
-      <p><strong>Status:</strong> <span class="status">{{ order.status }}</span></p>
-      <p><strong>Total:</strong> ₹{{ order.totalPrice }}</p>
+  <!-- 🟨 RIGHT PANEL -->
+  <div class="checkout-right">
+    <h3>Delivery Details</h3>
 
-      <div class="order-actions">
-        <button (click)="cancelOrder(order)" [disabled]="order.status === 'Cancelled'">
-          Cancel Order
-        </button>
+    <form (ngSubmit)="placeOrder()">
+      <div class="row">
+        <div class="field">
+          <label for="fullName" >Full Name</label>
+          <input id="fullName" placeholder="Full Name" [(ngModel)]="addr.fullName" name="fullName" required>
+        </div>
+
+        <div class="field">
+          <label for="street" >Street</label>
+          <input id="street" placeholder="Street" [(ngModel)]="addr.street" name="street" required>
+        </div>
       </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="city" >City</label>
+          <input id="city" placeholder="City" [(ngModel)]="addr.city" name="city" required>
+        </div>
+
+        <div class="field">
+          <label for="state" >State</label>
+          <input id="state" placeholder="State" [(ngModel)]="addr.state" name="state" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="postalCode" >Postal Code</label>
+          <input id="postalCode" placeholder="Postal Code" [(ngModel)]="addr.postalCode" name="postalCode" required>
+        </div>
+
+        <div class="field">
+          <label for="country" >Country</label>
+          <input id="country" placeholder="Country" [(ngModel)]="addr.country" name="country" required>
+        </div>
+      </div>
+
+      <div class="cod">
+        <input type="radio" checked disabled>
+        Cash on Delivery (only)
+      </div>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Placing...' : 'Place Order' }}
+      </button>
+    </form>
+  </div>
+  <!-- ✅ Success Notification -->
+<div class="success-toast" *ngIf="orderConfirmed">
+  <div class="toast-content">
+    <div class="checkmark">
+      <svg viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+        <path class="checkmark__check" fill="none" d="M14 27l7 7 16-16" />
+      </svg>
+    </div>
+    <div class="toast-text">
+      <p>Your order has been <strong>successfully submitted!</strong></p>
     </div>
   </div>
 </div>
-
-
+</div>

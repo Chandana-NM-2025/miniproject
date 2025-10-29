@@ -1,26 +1,26 @@
+
 <div class="topbar">
   <div class="topbar-left">
     <span>Welcome to E-Shop!</span>
   </div>
-  <div class="topbar-right" class="nav-icons">
-<div >
-    <span class="font" >
-      <a routerLink="/wishlist">wishlist</a>
-      <a routerLink="/cart">cart</a>
+
+  <div class="topbar-right">
+    <span class="font">
+      <a routerLink="/wishlist">💖Wishlist</a>
+      <a routerLink="/cart">🛒 Cart</a>
     </span>
 
-
+    <!-- 👇 Show when not logged in -->
     <span *ngIf="!isLoggedIn">
-      <a routerLink="/login">login</a> | 
-      <a routerLink="/register">Register</a>
+      <a routerLink="/login"> Login</a> |
+      <a routerLink="/register">  Register</a>
     </span>
-    
+    <div>
+    <!-- 👇 Show when logged in -->
     <span *ngIf="isLoggedIn">
-      Hello, {{ username }} | 
-      <a href="#" (click)="logout()">Logout</a> | 
-      Cart: {{ cartCount }}
+      Hello, {{ username }} |
+      <a href="#" (click)="logout()">Logout</a>
     </span>
-     
+    </div>
   </div>
-
 </div>

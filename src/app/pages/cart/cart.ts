@@ -1,72 +1,109 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { CartService, CartItem } from '../../services/cart';
-import { Router, RouterModule } from '@angular/router';
+import { CartService } from '../../services/cart';
+import { CartItem } from '../../services/cart';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule],
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
 })
 export class CartComponent implements OnInit {
-  cartItems: CartItem[] = [];
-  loading = true;
-  total: number = 0;
-  userID = 1; // Replace with logged-in user ID
+  items: CartItem[] = [];
+  message = '';
+  total = 0;
 
-  constructor(private cartService: CartService, private router: Router) {}
+  constructor(private cart: CartService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.loadCart();
-  }
+  ngOnInit(): void { this.load(); }
 
-  loadCart() {
-    this.loading = true;
-    this.cartService.getCart(this.userID).subscribe({
-      next: (cart) => {
-        this.cartItems = cart.items;
-        this.calculateTotal();
-        this.loading = false;
+  load() {
+    this.cart.getCart().subscribe({
+      next: res => {
+        this.items = res;
+        this.recalc();
       },
-      error: () => this.loading = false
+      error: () => this.message = 'Failed to load cart'
     });
   }
 
-  calculateTotal() {
-    this.total = this.cartItems.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0
-    );
+  recalc() {
+    this.total = this.items.reduce((s, ci) => s + ci.product.price * ci.quantity, 0);
   }
 
-  increaseQty(item: CartItem) {
-    if (item.quantity < item.product.quantity) {
-      item.quantity++;
-      this.cartService.updateCartItem(item).subscribe(() => this.calculateTotal());
+ inc(item: CartItem) {
+  if (item.quantity >= item.product.stock) {
+    this.message = `⚠️ Only ${item.product.stock} units available`;
+    setTimeout(() => this.message = '', 2000);
+    return;
+  }
+
+  const newQty = item.quantity + 1;
+  this.cart.updateCartItem(item.id, newQty).subscribe({
+    next: () => {
+      // ✅ instantly update UI
+      item.quantity = newQty;
+      this.recalc();
+      this.message = `✅ Quantity updated for ${item.product.name}`;
+      setTimeout(() => this.message = '', 2000);
+    },
+    error: (err) => {
+      console.error('❌ Failed to update quantity:', err);
+      if (err.status === 204 || err.status === 200) {
+        item.quantity = newQty;
+        this.recalc();
+        this.message = `✅ Quantity updated for ${item.product.name}`;
+        setTimeout(() => this.message = '', 2000);
+      } else {
+        this.message = '❌ Something went wrong';
+      }
     }
+  });
+}
+
+dec(item: CartItem) {
+  if (item.quantity <= 1) {
+    this.message = `⚠️ Quantity can’t go below 1`;
+    setTimeout(() => this.message = '', 2000);
+    return;
   }
 
-  decreaseQty(item: CartItem) {
-    if (item.quantity > 1) {
-      item.quantity--;
-      this.cartService.updateCartItem(item).subscribe(() => this.calculateTotal());
+  const newQty = item.quantity - 1;
+  this.cart.updateCartItem(item.id, newQty).subscribe({
+    next: () => {
+      // ✅ instantly update UI
+      item.quantity = newQty;
+      this.recalc();
+      this.message = `✅ Quantity updated for ${item.product.name}`;
+      setTimeout(() => this.message = '', 2000);
+    },
+    error: (err) => {
+      console.error('❌ Failed to update quantity:', err);
+      if (err.status === 204 || err.status === 200) {
+        item.quantity = newQty;
+        this.recalc();
+        this.message = `✅ Quantity updated for ${item.product.name}`;
+        setTimeout(() => this.message = '', 2000);
+      } else {
+        this.message = '❌ Something went wrong';
+      }
     }
-  }
+  });
+}
 
-  removeItem(item: CartItem) {
-    this.cartService.removeCartItem(item.id).subscribe(() => {
-      this.cartItems = this.cartItems.filter(i => i.id !== item.id);
-      this.calculateTotal();
-    });
-  }
 
-  checkout() {
-    this.cartService.checkout(this.userID).subscribe(() => {
-      alert('Order placed successfully!');
-      this.router.navigate(['/checkout']); // redirect to checkout page
-    });
+ remove(item: CartItem) {
+  this.cart.removeFromCart(item.id).subscribe({
+    next: () => { this.message = 'Removed from cart'; this.load(); },
+    error: err => console.error('❌ Failed to remove:', err)
+  });
+}
+
+  proceedToCheckout() {
+    if (!this.items.length) { this.message = 'Cart is empty'; return; }
+    this.router.navigate(['/orders']);
   }
 }

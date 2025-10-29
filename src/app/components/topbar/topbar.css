@@ -1,32 +1,30 @@
-.font{
-  font-size: samall;
-   padding: 3rem;
-}
-
 .topbar {
   display: flex;
   justify-content: space-between;
-  padding: 0.1rem 1rem;
-  background-color: #1f2937;
-  color: #fff;
-  font-size: 1rem;
-  
+  align-items: center;
+  background-color: #202020;
+  color: white;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
 }
+
 .topbar a {
-  color: #fff;
+  color: #e9e8e1;
+  margin: 0 10px;
   text-decoration: none;
-  margin-left: 0.5rem;
- 
 }
+
 .topbar a:hover {
   text-decoration: underline;
 }
-.nav-icons a {
-  margin-left: 15px;
-  color: #ecdfdf;
-  font-size: 18px;
+
+.topbar-left {
+  font-weight: bold;
 }
 
-.nav-icons a:hover {
-  color: #00c853;
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
